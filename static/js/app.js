@@ -150,6 +150,7 @@ const collectCoin = new Audio("/static/audio/collect-coin.mp3");
         if (coins[key]) {
             // Remove this key from data, then update Player's coin count
             firebase.database().ref(`coins/${key}`).remove();
+            collectCoin.pause();
             collectCoin.currentTime = 0;
             collectCoin.play();
             playerRef.update({
@@ -278,6 +279,11 @@ const collectCoin = new Audio("/static/audio/collect-coin.mp3");
             // Keep a reference for removal later and add to DOM
             coinElements[key] = coinElement;
             gameContainer.appendChild(coinElement);
+        });
+
+        // Delete Coin from Locale State
+        allCoinsRef.on("value", (snapshot) => {
+            coins = snapshot.val() || {};
         });
 
         // Delete Coin on Loby
